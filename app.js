@@ -16,6 +16,7 @@ import { router as userRouter } from './routes/userRoutes.js';
 import { router as reviewRouter } from './routes/reviewRoutes.js';
 import { router as viewRouter } from './routes/viewRoutes.js';
 import { router as bookingRouter } from './routes/bookingRoutes.js';
+import compression from 'compression';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -89,6 +90,8 @@ app.use(
     ]
   })
 );
+
+app.use(compression());
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
