@@ -19,6 +19,7 @@ import { router as bookingRouter } from './routes/bookingRoutes.js';
 import compression from 'compression';
 import cors from 'cors';
 import { webHookCheckout } from './controllers/bookingController.js';
+import bodyParser from 'body-parser';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -67,7 +68,7 @@ app.use('/api', limiter);
 
 app.post(
   '/webhook-checkout',
-  express.raw({ type: 'application/json' }),
+  bodyParser.raw({ type: 'application/json' }),
   webHookCheckout
 );
 
