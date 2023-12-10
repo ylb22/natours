@@ -17,14 +17,22 @@ import { router as reviewRouter } from './routes/reviewRoutes.js';
 import { router as viewRouter } from './routes/viewRoutes.js';
 import { router as bookingRouter } from './routes/bookingRoutes.js';
 import compression from 'compression';
+import cors from 'cors';
+import { webHookCheckout } from './controllers/bookingController.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
+
+app.enable('trust proxy');
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // 1) GLOBAL MIDDLEWARES
+
+app.use(cors());
+
+app.options('*', cors());
 
 //Serving static file
 app.use(express.static(path.join(__dirname, 'public')));
@@ -56,6 +64,12 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP,please try again in an hour!'
 });
 app.use('/api', limiter);
+
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  webHookCheckout
+);
 
 // Body parser, reading data from body into req.body
 app.use(
